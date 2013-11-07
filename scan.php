@@ -1,6 +1,6 @@
 <?php
 
-$votos = file('votos_cordoba_izquierda.csv');
+$votos = file('votos_cordoba_izquierda2.csv');
 
 array_shift($votos); // Sacamos la cabecera
 
@@ -20,14 +20,21 @@ foreach ( $votos as $mesa ) {
 	$tot = $datos[8];
 
 	if ( $tot > 0) {
+		$tot = trim($tot);
 		$t_nul += $nul;
 		$t_izq += $izq;
 		$t_tot += $tot;
-		$h_izq[ round( ($izq * 100) / $tot) ]++;
+		@$h_izq[ round( ($izq * 100) / $tot) ]++;
 
-		if ( ( $nul * 100 / $tot ) > 6 && ($izq * 100 / $tot) < 15 && $tot > 50 ) {
-			echo $mesa;
+		if ( $tot > 300 ) {
+			$url = "http://www.resultados.gob.ar/telegramas/".$datos[0].'/'.$datos[1].'/'.$datos[2].'/'.$datos[0].$datos[1].$datos[2];
+			if ( strlen($datos[2]) == 4 ) {
+				$url .= '_';
+			}
+			$url .= $datos[3].'.htm';
+			echo $url."    $tot\n\n"; 
 		}
+
 	}
 }
-echo 'Nulos '.($t_nul / $i).' Izq '.($t_izq / $i);
+// echo 'Nulos '.($t_nul / $i).' Izq '.($t_izq / $i);
